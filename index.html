@@ -8,30 +8,34 @@ body {
 }
 
 .vin {
-  cursor: crosshair;
+	cursor: crosshair;
 }
 
 .tabl {
-  font-family: Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
+	font-family: Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	width: 100%;
 }
 
 .tabl td, .tabl th {
-  border: 1px solid #ddd;
-  padding: 8px;
+	border: 1px solid #ddd;
+	padding: 8px;
 }
 
-.tabl tr:nth-child(even){background-color: #f2f2f2;}
+.tabl tr:nth-child(even){
+	background-color: #f2f2f2;
+}
 
-.tabl tr:hover {background-color: #ddd;}
+.tabl tr:hover {
+	background-color: #ddd;
+}
 
 .tabl th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #04AA6D;
-  color: white;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #04AA6D;
+ 	color: white;
 }
 
 </style>
@@ -43,12 +47,13 @@ body {
 <p>A vector can be decomposed into components along the X-axis and the Y-axis: <p style="text-align: center"><b>V</b> = V<sub>x</sub> <b>i</b> + V<sub>y</sub> <b>j</b></p>where <b>i</b> and <b>j</b> are unit vectors along the X and Y axes, respectively.  These components are displayed with dashed lines in the chart.</p>
 <div id="container"></div>
 <div id="outdata">
-  <input type="checkbox" id="posangle" name="posangle">
-  <label for="posangle"> Use positive angle only</label>
+	<input type="checkbox" id="posangle" name="posangle">
+	<label for="posangle"> Use positive angle only</label>
 </div>
 <br>
 <p>2023 Physics with Dad</p>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="table.js"></script>
 <script type="module">
 
 // Declare the chart dimensions and margins.
@@ -61,39 +66,6 @@ const marginLeft = 20;
 
 const deg = Math.PI/180;
 var radiusMax = 100;
-
-function tabulate(data, columns) {
-	d3.select(".tabl").remove();
-	var table = d3.select('#outdata').append('table').attr("class", "tabl");
-	var thead = table.append('thead');
-	var	tbody = table.append('tbody');
-
-	// append the header row
-	thead.append('tr')
-	  .selectAll('th')
-	  .data(columns).enter()
-	  .append('th')
-	    .text(function (column) { return column; });
-
-	// create a row for each object in the data
-	var rows = tbody.selectAll('tr')
-	  .data(data)
-	  .enter()
-	  .append('tr');
-
-	// create a cell in each row for each column
-	var cells = rows.selectAll('td')
-	  .data(function (row) {
-	    return columns.map(function (column) {
-	      return {column: column, value: row[column]};
-	    });
-	  })
-	  .enter()
-	  .append('td')
-	    .html(function (d) { return d.value; });
-
-  return table;
-}
 
 var magnitude = function(v) {
 	let r = Math.sqrt(v[0]*v[0] + v[1]*v[1]);
@@ -109,13 +81,13 @@ var phase = function(v) {
 
 // Declare the x (horizontal position) scale.
 const x = d3.scaleLinear()
-    .domain([-radiusMax, radiusMax])
-    .range([marginLeft, width - marginRight]);
+	.domain([-radiusMax, radiusMax])
+	.range([marginLeft, width - marginRight]);
 
 // Declare the y (vertical position) scale.
 const y = d3.scaleLinear()
-    .domain([-radiusMax, radiusMax])
-    .range([height - marginBottom, marginTop]);
+	.domain([-radiusMax, radiusMax])
+	.range([height - marginBottom, marginTop]);
 
 const update = function(vpEnd) {
 	var vEnd = [vpEnd[0]*Math.cos(vpEnd[1]*deg), vpEnd[0]*Math.sin(vpEnd[1]*deg)];
@@ -124,88 +96,91 @@ const update = function(vpEnd) {
 	svg.selectAll(".anglearc")
 		.data([vpEnd])
 		.join("path")
-		  .attr("class", "anglearc")
-		  .attr("transform", `translate(${x(0)}, ${y(0)})`)
-		  .attr('fill', 'gray')
-		  .attr("d", d => d3.arc()({
-		    innerRadius: 0.25*(x(d[0])-x(0))-2,
-		    outerRadius: 0.25*(x(d[0])-x(0))+2,
-		    startAngle: 90*deg,
-		    endAngle: (90 - d[1])*deg
-		    }));
+			.attr("class", "anglearc")
+			.attr("transform", `translate(${x(0)}, ${y(0)})`)
+			.attr('fill', 'gray')
+			.attr("d", d => d3.arc()({
+			innerRadius: 0.25*(x(d[0])-x(0))-2,
+			outerRadius: 0.25*(x(d[0])-x(0))+2,
+			startAngle: 90*deg,
+			endAngle: (90 - d[1])*deg
+			}));
 
 	// Radius reference
 	svg.selectAll(".radiusref")
 		.data([vpEnd])
 		.join("path")
-		  .attr("class", "radiusref")
-		  .attr("transform", `translate(${x(0)}, ${y(0)})`)
-		  .attr('fill', 'lightgray')
-		  .attr("d", d => d3.arc()({
-		    innerRadius: (x(d[0])-x(0))-1,
-		    outerRadius: (x(d[0])-x(0))+1,
-		    startAngle: 0,
-		    endAngle: 2*Math.PI
-		    }));
+			.attr("class", "radiusref")
+			.attr("transform", `translate(${x(0)}, ${y(0)})`)
+			.attr('fill', 'lightgray')
+			.attr("d", d => d3.arc()({
+				innerRadius: (x(d[0])-x(0))-1,
+				outerRadius: (x(d[0])-x(0))+0,
+				startAngle: 0,
+				endAngle: 2*Math.PI
+			}));
 
 	// Vector
 	svg.selectAll(".vector")
-	  .data([vEnd])
-	  .join('path')
-		.attr("class", "vector")
-	    .attr('stroke-width', '6px')
-	    .attr('stroke', 'blue')
-	    .attr('fill', 'none')
-	    .attr('d', d => d3.line()([[x(0), y(0)], [x(d[0]), y(d[1])]]));
+		.data([vEnd])
+		.join('path')
+			.attr("class", "vector")
+			.attr('stroke-width', '6px')
+			.attr('stroke', 'blue')
+			.attr('fill', 'none')
+			.attr('d', d => d3.line()([[x(0), y(0)], [x(d[0]), y(d[1])]]));
 
 	// Vector x-component
 	svg.selectAll(".vectorx")
-	  .data([vEnd])
-	  .join('path')
-		.attr("class", "vectorx")
-	    .attr('stroke-width', '3px')
-	    .attr('stroke', 'red')
-	    .style('stroke-dasharray', ('5,5'))
-	    .attr('fill', 'none')
-	    .attr('d', d => d3.line()([[x(0), y(0)], [x(d[0]), y(0)]]));
+		.data([vEnd])
+		.join('path')
+			.attr("class", "vectorx")
+			.attr('stroke-width', '3px')
+			.attr('stroke', 'red')
+			.style('stroke-dasharray', ('5,5'))
+			.attr('fill', 'none')
+			.attr('d', d => d3.line()([[x(0), y(0)], [x(d[0]), y(0)]]));
 
 	// Vector y-component
 	svg.selectAll(".vectory")
-	  .data([vEnd])
-	  .join('path')
-		.attr("class", "vectory")
-	    .attr('stroke-width', '3px')
-	    .attr('stroke', 'green')
-	    .style('stroke-dasharray', ('5,5'))
-	    .attr('fill', 'none')
-	    .attr('d', d => d3.line()([[x(d[0]), y(0)], [x(d[0]), y(d[1])]]));
+		.data([vEnd])
+		.join('path')
+			.attr("class", "vectory")
+			.attr('stroke-width', '3px')
+			.attr('stroke', 'green')
+			.style('stroke-dasharray', ('5,5'))
+			.attr('fill', 'none')
+			.attr('d', d => d3.line()([[x(d[0]), y(0)], [x(d[0]), y(d[1])]]));
 	
 	var data = [
-	{"Vector Property" : "Magnitude", "Symbol" : "V", "Formula" : "(V<sub>x</sub><sup>2</sup> + V<sub>y</sub><sup>2</sup>)<sup>1/2</sup>", "Value" : `${vpEnd[0]}`},
-	{"Vector Property" : "Angle", "Symbol" : "\u03b8", "Formula" : "atan (V<sub>y</sub> / V<sub>x</sub>)", "Value" : `${vpEnd[1]}\u00b0  (= ${(vpEnd[1]/180).toFixed(2)}\u03c0 rad)`},
-	{"Vector Property" : "X-component", "Symbol" : "V<sub>x</sub>", "Formula" : "V * cos(\u03b8)", "Value" : `${vEnd[0].toFixed(1)}`},
-	{"Vector Property" : "Y-component", "Symbol" : "V<sub>y</sub>", "Formula" : "V * sin(\u03b8)", "Value" : `${vEnd[1].toFixed(1)}`}
+		{"Vector Property" : "Magnitude", "Symbol" : "V", "Formula" : "(V<sub>x</sub><sup>2</sup> + V<sub>y</sub><sup>2</sup>)<sup>1/2</sup>", "Value" : `${vpEnd[0]}`},
+		{"Vector Property" : "Angle", "Symbol" : "\u03b8", "Formula" : "atan (V<sub>y</sub> / V<sub>x</sub>)", "Value" : `${vpEnd[1]}\u00b0  (= ${(vpEnd[1]/180).toFixed(2)}\u03c0 rad)`},
+		{"Vector Property" : "X-component", "Symbol" : "V<sub>x</sub>", "Formula" : "V * cos(\u03b8)", "Value" : `${vEnd[0].toFixed(1)}`},
+		{"Vector Property" : "Y-component", "Symbol" : "V<sub>y</sub>", "Formula" : "V * sin(\u03b8)", "Value" : `${vEnd[1].toFixed(1)}`}
 	];
 
-	tabulate(data, ["Vector Property", "Symbol", "Formula", "Value"]);
-	}  
+	table.update(data, ["Vector Property", "Symbol", "Formula", "Value"], "vprop");
+}  
 
 // Create the SVG container.
 const svg = d3.create("svg")
-    .attr("width", width)
-    .attr("height", height)
+	.attr("width", width)
+	.attr("height", height)
 	.style("display", "block")
 	.style("margin", "auto");
 
 // Add the x-axis, where y = 0
 svg.append("g")
-    .attr("transform", `translate(0,${y(0)})`)
-    .call(d3.axisBottom(x));
+	.attr("transform", `translate(0,${y(0)})`)
+	.call(d3.axisBottom(x));
 
 // Add the y-axis, where x = 0
 svg.append("g")
-    .attr("transform", `translate(${x(0)},0)`)
-    .call(d3.axisLeft(y));
+	.attr("transform", `translate(${x(0)},0)`)
+	.call(d3.axisLeft(y));
+
+// Add vector table
+table.create([], [], d3.select("#outdata"), "vprop");
 
 // Add initial vector
 update([0, 0]);
@@ -214,25 +189,25 @@ update([0, 0]);
 svg.append("path")
 	.attr('class', 'vin')
 	.attr('id', 'rmax')
-    .attr("transform", `translate(${x(0)}, ${y(0)})`)
-    .attr("d", d3.arc()({
-      innerRadius: 0,
-      outerRadius: (x(radiusMax)-x(0)),
-      startAngle: 0,
-      endAngle: 2*Math.PI
-    }))
+	.attr("transform", `translate(${x(0)}, ${y(0)})`)
+	.attr("d", d3.arc()({
+		innerRadius: 0,
+		outerRadius: (x(radiusMax)-x(0)),
+		startAngle: 0,
+		endAngle: 2*Math.PI
+	}))
 	.attr('fill', 'lightgray')
 	.attr('opacity', 0.2)
 	.on('click', (event) => {
-	  var br = event.target.getBoundingClientRect();
-	  var ex = x.invert(event.clientX-br.left+marginLeft);
-	  var ey = y.invert(event.clientY-br.top+marginTop);
+		var br = event.target.getBoundingClientRect();
+		var ex = x.invert(event.clientX-br.left+marginLeft);
+		var ey = y.invert(event.clientY-br.top+marginTop);
 
-	  var r = Math.round(magnitude([ex, ey]));
-	  var ang = Math.round(phase([ex, ey]));
-	  
-	  change([r, ang], 1000);
-	  });
+		var r = Math.round(magnitude([ex, ey]));
+		var ang = Math.round(phase([ex, ey]));
+
+		change([r, ang], 1000);
+	});
 
 var dr, da;
 var changing = false;
@@ -244,17 +219,18 @@ const change = function(vnew, t) {
 	da = vnew[1] - vlast[1];
 
 	var at = d3.timer((elapsed) => {
-	  if(elapsed > t) {
-	    at.stop();
-		update(vnew);
-		vlast = vnew;
-		changing = false;
-		return;
-	  }
-	  var fr = Math.sin(elapsed/t*Math.PI/2);
-	  fr *= fr;
-	  update([(fr*dr + vlast[0]).toFixed(0), (fr*da + vlast[1]).toFixed(0)]);
-	  });
+		if(elapsed > t) {
+			at.stop();
+			update(vnew);
+			vlast = vnew;
+			changing = false;
+			return;
+		}
+
+		var fr = Math.sin(elapsed/t*Math.PI/2);
+		fr *= fr;
+		update([(fr*dr + vlast[0]).toFixed(0), (fr*da + vlast[1]).toFixed(0)]);
+	});
 }
 
 var vlast = [80,60];
