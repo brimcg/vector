@@ -22,23 +22,23 @@ var table = {
 
 		// append the header row
 		thead.select('tr')
-		  .selectAll('th')
-		  .data(columns).join('th')
+			.selectAll('th')
+			.data(columns).join('th')
 			.text(function (column) { return column; });
 
 		// create a row for each object in the data
 		var rows = tbody.selectAll('tr')
-		  .data(data)
-		  .join('tr');
+			.data(data)
+			.join('tr');
 
 		// create a cell in each row for each column
 		var cells = rows.selectAll('td')
-		  .data(function (row) {
-			return columns.map(function (column) {
-			  return {column: column, value: row[column]};
-			});
-		  })
-		  .join('td')
+			.data(function (row) {
+				return columns.map(function (column) {
+					return {column: column, value: row[column]};
+				});
+			})
+			.join('td')
 			.html(function (d) { return d.value; });
 	}
 }
