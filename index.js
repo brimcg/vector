@@ -97,8 +97,8 @@ const update = function(vpEnd) {
 	var data = [
 		{"Vector Property" : "Magnitude", "Symbol" : "V", "Formula" : "(V<sub>x</sub><sup>2</sup> + V<sub>y</sub><sup>2</sup>)<sup>1/2</sup>", "Value" : `${vpEnd[0]}`},
 		{"Vector Property" : "Angle", "Symbol" : "\u03b8", "Formula" : "atan (V<sub>y</sub> / V<sub>x</sub>)", "Value" : `${vpEnd[1]}\u00b0  (= ${(vpEnd[1]/180).toFixed(2)}\u03c0 rad)`},
-		{"Vector Property" : "X-component", "Symbol" : "V<sub>x</sub>", "Formula" : "V * cos(\u03b8)", "Value" : `${vEnd[0].toFixed(1)}`},
-		{"Vector Property" : "Y-component", "Symbol" : "V<sub>y</sub>", "Formula" : "V * sin(\u03b8)", "Value" : `${vEnd[1].toFixed(1)}`}
+		{"Vector Property" : "X-component", "Symbol" : "V<sub>x</sub>", "Formula" : "V cos(θ)", "Value" : `${vEnd[0].toFixed(1)}`},
+		{"Vector Property" : "Y-component", "Symbol" : "V<sub>y</sub>", "Formula" : "V sin(θ)", "Value" : `${vEnd[1].toFixed(1)}`}
 	];
 
 	table.update(data, ["Vector Property", "Symbol", "Formula", "Value"], "vprop");
