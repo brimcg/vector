@@ -10,7 +10,7 @@ var table = {
 			.attr("id", id);
 		var thead = t.append('thead');
 		thead.append('tr')
-		var	tbody = t.append('tbody');
+		var tbody = t.append('tbody');
 
 		table.update(data, columns, id);
 	},
