@@ -21,6 +21,10 @@ var phase = function(v) {
 	return ang;
 }
 
+var cartesian = function(v) {
+	return [v[0]*Math.cos(v[1]*deg), v[0]*Math.sin(v[1]*deg)]
+}
+
 // Declare the x (horizontal position) scale.
 const x = d3.scaleLinear()
 	.domain([-radiusMax, radiusMax])
@@ -31,26 +35,26 @@ const y = d3.scaleLinear()
 	.domain([-radiusMax, radiusMax])
 	.range([height - marginBottom, marginTop]);
 
-const update = function(vpEnd) {
-	var vEnd = [vpEnd[0]*Math.cos(vpEnd[1]*deg), vpEnd[0]*Math.sin(vpEnd[1]*deg)];
+const update = function(vp) {
+	var vc = cartesian(vp);
 
 	// Angle arc
 	svg.selectAll(".anglearc")
-		.data([vpEnd])
+		.data([vp])
 		.join("path")
 			.attr("class", "anglearc")
 			.attr("transform", `translate(${x(0)}, ${y(0)})`)
 			.attr('fill', 'gray')
 			.attr("d", d => d3.arc()({
-			innerRadius: 0.25*(x(d[0])-x(0))-2,
-			outerRadius: 0.25*(x(d[0])-x(0))+2,
-			startAngle: 90*deg,
-			endAngle: (90 - d[1])*deg
+				innerRadius: 0.2*(x(d[0])-x(0))-2,
+				outerRadius: 0.2*(x(d[0])-x(0))+2,
+				startAngle: 90*deg,
+				endAngle: (90 - d[1])*deg
 			}));
 
 	// Radius reference
 	svg.selectAll(".radiusref")
-		.data([vpEnd])
+		.data([vp])
 		.join("path")
 			.attr("class", "radiusref")
 			.attr("transform", `translate(${x(0)}, ${y(0)})`)
@@ -64,7 +68,7 @@ const update = function(vpEnd) {
 
 	// Vector
 	svg.selectAll(".vector")
-		.data([vEnd])
+		.data([vc])
 		.join('path')
 			.attr("class", "vector")
 			.attr('stroke-width', '6px')
@@ -74,7 +78,7 @@ const update = function(vpEnd) {
 
 	// Vector x-component
 	svg.selectAll(".vectorx")
-		.data([vEnd])
+		.data([vc])
 		.join('path')
 			.attr("class", "vectorx")
 			.attr('stroke-width', '3px')
@@ -85,7 +89,7 @@ const update = function(vpEnd) {
 
 	// Vector y-component
 	svg.selectAll(".vectory")
-		.data([vEnd])
+		.data([vc])
 		.join('path')
 			.attr("class", "vectory")
 			.attr('stroke-width', '3px')
@@ -95,10 +99,10 @@ const update = function(vpEnd) {
 			.attr('d', d => d3.line()([[x(d[0]), y(0)], [x(d[0]), y(d[1])]]));
 	
 	var data = [
-		{"Vector Property" : "Magnitude", "Symbol" : "V", "Formula" : "(V<sub>x</sub><sup>2</sup> + V<sub>y</sub><sup>2</sup>)<sup>1/2</sup>", "Value" : `${vpEnd[0]}`},
-		{"Vector Property" : "Angle", "Symbol" : "\u03b8", "Formula" : "atan (V<sub>y</sub> / V<sub>x</sub>)", "Value" : `${vpEnd[1]}\u00b0  (= ${(vpEnd[1]/180).toFixed(2)}\u03c0 rad)`},
-		{"Vector Property" : "X-component", "Symbol" : "V<sub>x</sub>", "Formula" : "V cos(θ)", "Value" : `${vEnd[0].toFixed(1)}`},
-		{"Vector Property" : "Y-component", "Symbol" : "V<sub>y</sub>", "Formula" : "V sin(θ)", "Value" : `${vEnd[1].toFixed(1)}`}
+		{"Vector Property" : "Magnitude",	"Symbol" : "V",				"Formula" : "(V<sub>x</sub><sup>2</sup> + V<sub>y</sub><sup>2</sup>)<sup>1/2</sup>",	"Value" : `${vp[0]}`},
+		{"Vector Property" : "Angle", 		"Symbol" : "θ",				"Formula" : "atan (V<sub>y</sub> / V<sub>x</sub>)",										"Value" : `${vp[1]}°  (= ${(vp[1]/180).toFixed(2)}π rad)`},
+		{"Vector Property" : "X-component",	"Symbol" : "V<sub>x</sub>",	"Formula" : "V cos(θ)",																	"Value" : `${vc[0].toFixed(1)}`},
+		{"Vector Property" : "Y-component",	"Symbol" : "V<sub>y</sub>",	"Formula" : "V sin(θ)",																	"Value" : `${vc[1].toFixed(1)}`}
 	];
 
 	table.update(data, ["Vector Property", "Symbol", "Formula", "Value"], "vprop");
